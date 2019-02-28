@@ -1,0 +1,39 @@
+AIRLINES ANALYSIS CODES
+
+-------CREATING REQUIRED TABLES---------
+
+create table airports (airport_id string, name string, country string, IATA_FAA string, ICAO string, latitude string, longitude string,altitude string, TimeZone string, DST string, TZ string) row format delimited fields terminated by ',';
+
+create table finalairlines (airline string, name string, alias string, IATA string, ICAO string, callsign string, country string, active string) row format delimited fields terminated by ',';
+
+create table routes (airlines string, airline_id string string, source_airport_id string, destination_airport string, destination_airport_id string,code_share string,stops string, equipments string) row format delimited fields terminated by ',';
+
+-------LOADING DATA INTO TABLES-----------
+
+load data inpath '/user/cloudera/airports_mod.dat' into table airports;
+
+load data inpath '/user/cloudera/Final_airlines' into table finalairlines;
+
+load data inpath '/user/cloudera/routes.dat' into table routes;
+
+----------------------------------------
+
+1. FIND THE LIST OF AIRPORTS OPERATING IN COUNTRY INDIA:
+
+create table indiaairports as select*from airports where country LIKE '%India%';
+
+2. LIST OF AIRLINES HAVING ZERO STOPS:
+
+create table stops as select * from routes where stops LIKE '%0%';
+
+3. AIRLINES OPERATING WITH SAME CODESHARE:
+
+select airlines, code_share from routes where code_share =='Y';
+
+4. WHICH COUNTRY HAS HIGHEST AIRPORTS;
+
+select country,count(country) as airlinesCount from airports group by country order by airlinesCount desc limit 1;
+
+5. LIST OF ACTIVE AIRLINES IN UNITED STATES:
+
+select*from airlines where country == 'United States' and active == 'Y';
